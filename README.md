@@ -1,1 +1,0 @@
-# taikkyithar.github.io
