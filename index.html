@@ -1,48 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profilo - Your Name</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Year 2025 Countdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js@0.0.18/dist/index.min.js"></script>
 </head>
-<body>
-  <div class="container">
-    <header class="header">
-      <h1>Your Name</h1>
-      <p>Your tagline or profession (e.g., "Web Developer | Designer | Tech Enthusiast")</p>
-    </header>
-    <nav class="navbar">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <section id="about" class="section">
-      <h2>About Me</h2>
-      <p>Write a brief introduction about yourself, your interests, and your expertise.</p>
-    </section>
-    <section id="projects" class="section">
-      <h2>Projects</h2>
-      <div class="project-list">
-        <div class="project">
-          <h3>Project 1</h3>
-          <p>A brief description of your project. <a href="https://github.com/your-username/project1">View on GitHub</a></p>
-        </div>
-        <div class="project">
-          <h3>Project 2</h3>
-          <p>A brief description of your project. <a href="https://github.com/your-username/project2">View on GitHub</a></p>
-        </div>
-      </div>
-    </section>
-    <section id="contact" class="section">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:your-email@example.com">your-email@example.com</a></p>
-      <p>LinkedIn: <a href="https://linkedin.com/in/your-username">your-username</a></p>
-      <p>GitHub: <a href="https://github.com/your-username">your-username</a></p>
-    </section>
-    <footer class="footer">
-      <p>© 2024 Your Name. All Rights Reserved.</p>
-    </footer>
-  </div>
+<body class="bg-black text-white flex flex-col items-center justify-center min-h-screen">
+    <h1 class="text-4xl font-bold mb-8">New Year 2025 Countdown</h1>
+    <div id="countdown" class="text-6xl font-mono"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // Countdown
+        function updateCountdown() {
+            const now = new Date();
+            const newYear = new Date("2025-01-01T00:00:00");
+            const diff = newYear - now;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Confetti
+        const confettiSettings = {
+            target: 'confetti-canvas',
+            max: 80,
+            size: 1,
+            animate: true,
+            props: ['circle', 'square', 'triangle', 'line'],
+            colors: [[165,104,246],[230,61,135],[0,199,228],[253,214,126]],
+            clock: 25,
+            rotate: true,
+            width: window.innerWidth,
+            height: window.innerHeight,
+            start_from_edge: true,
+            respawn: true
+        };
+
+        const confetti = new ConfettiGenerator(confettiSettings);
+        confetti.render();
+
+        // Randomly add more confetti every few seconds
+        setInterval(() => {
+            confetti.setCount(Math.floor(Math.random() * 50) + 30);
+        }, 3000);
+
+        // Resize confetti canvas on window resize
+        window.addEventListener('resize', () => {
+            confetti.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
 </html>
