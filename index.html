@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taikkyithar | Cyber Matrix</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .container {
+      padding: 4rem 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h1, h2 {
+      border-bottom: 1px solid #00ff00;
+      padding-bottom: 0.5rem;
+    }
+
+    section {
+      margin-bottom: 4rem;
+    }
+
+    a {
+      color: #00ff00;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid #00ff00;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+  <header>
+    <h1>တိုက်ကြီးသာ | Taikkyithar</h1>
+    <p>Welcome to my cyber realm. Stay encrypted. Stay vigilant.</p>
+  </header>
+
+  <section id="about">
+    <h2>အကြောင်း</h2>
+    <p>ကျွန်ုပ်သည် Cybersecurity နှင့် Tech ဆိုင်ရာများကိုစိတ်ပါဝင်စားသော Taikkyithar ဖြစ်ပါသည်။</p>
+  </section>
+
+  <section id="projects">
+    <h2>ပရောဂျက်များ</h2>
+    <ul>
+      <li>🔐 <strong>Firewall Watchdog</strong> – Intrusion detection app</li>
+      <li>📡 <strong>Myanmar Network Scanner</strong> – Port and vulnerability scan</li>
+      <li>🧠 <strong>OSINT Toolkit</strong> – Open-source intelligence tools</li>
+    </ul>
+  </section>
+
+  <section id="contact">
+    <h2>ဆက်သွယ်ရန်</h2>
+    <p>Email: <a href="mailto:your@email.com">your@email.com</a></p>
+    <p>GitHub: <a href="https://github.com/taikkyithar" target="_blank">github.com/taikkyithar</a></p>
+  </section>
+</div>
+
+<footer>
+  <p>© 2025 Taikkyithar. Built with ☠️ Cyber Energy.</p>
+</footer>
+
+<script>
+  const letters = "ကခဂနစျညဇထတငစဝဓ";
+  const canvas = document.getElementById("matrix");
+  const ctx = canvas.getContext("2d");
+
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  let columns = canvas.width / 20;
+  let drops = Array.from({ length: columns }).fill(1);
+
+  function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0F0";
+    ctx.font = "20px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      let text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * 20, drops[i] * 20);
+
+      if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 50);
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = canvas.width / 20;
+    drops = Array.from({ length: columns }).fill(1);
+  });
+</script>
+
+</body>
+</html>
