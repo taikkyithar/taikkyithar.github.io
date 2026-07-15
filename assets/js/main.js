@@ -172,39 +172,38 @@
     var SCENES = [
       {
         cmd: 'whoami',
-        out: ['<span class="val">system_engineer</span>']
+        out: ['<span class="val">taikkyithar</span>']
       },
       {
         cmd: 'cat profile.yml',
         out: [
-          '<span class="key">role</span>: <span class="val">System Engineer</span>',
-          '<span class="key">focus</span>: <span class="val">[infra, automation, uptime]</span>',
+          '<span class="key">role</span>: <span class="val">IT Support Specialist</span>',
+          '<span class="key">focus</span>: <span class="val">[linux, security, support]</span>',
           '<span class="key">os</span>: <span class="val">Linux / Windows Server</span>',
-          '<span class="key">cloud</span>: <span class="val">AWS · Docker · K8s</span>',
-          '<span class="key">uptime</span>: <span class="val">99.9%</span> <span class="comment"># and counting</span>'
+          '<span class="key">taught</span>: <span class="val">Kali · Parrot · web app sec</span>',
+          '<span class="key">since</span>: <span class="val">2013</span> <span class="comment"># still learning</span>'
         ]
       },
       {
-        cmd: 'ssh prod-01 uptime',
-        out: ['<span class="dim">14:22:07 up</span> <span class="val">412 days</span><span class="dim">, load 0.08</span>']
+        cmd: 'ssh lab-01 uptime',
+        out: ['<span class="dim">14:22:07 up</span> <span class="val">96 days</span><span class="dim">, load 0.08</span>']
       },
       {
-        cmd: 'ansible-playbook site.yml',
+        cmd: 'nmap -sV lab-01',
         out: [
-          '<span class="dim">PLAY [lab] ******************</span>',
-          '<span class="ok">ok</span>: [prod-01]',
-          '<span class="warn">changed</span>: [prod-02]',
-          '<span class="dim">PLAY RECAP ******************</span>',
-          '<span class="val">prod-01</span> <span class="ok">ok=12</span> <span class="dim">failed=0</span>'
+          '<span class="dim">PORT     STATE  SERVICE</span>',
+          '<span class="val">22/tcp</span>   <span class="ok">open</span>   ssh',
+          '<span class="val">80/tcp</span>   <span class="ok">open</span>   http',
+          '<span class="val">443/tcp</span>  <span class="ok">open</span>   https',
+          '<span class="dim">3306/tcp</span> <span class="warn">filtered</span> mysql'
         ]
       },
       {
-        cmd: 'kubectl get pods -n prod',
+        cmd: 'docker ps --format "{{.Names}}"',
         out: [
-          '<span class="dim">NAME        READY  STATUS</span>',
-          '<span class="val">api-7d9f8c</span>  1/1    <span class="ok">Running</span>',
-          '<span class="val">web-5c8b21</span>  1/1    <span class="ok">Running</span>',
-          '<span class="val">cache-3a1f</span>  1/1    <span class="ok">Running</span>'
+          '<span class="val">pihole</span>',
+          '<span class="val">grafana</span>',
+          '<span class="val">nginx-proxy</span>'
         ]
       }
     ];
