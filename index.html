@@ -32,22 +32,29 @@ description: System Engineer — Linux, Cloud, Automation & Network Reliability.
       </div>
     </div>
 
-    <div class="terminal" aria-hidden="true">
+    <div class="terminal hacker" aria-hidden="true">
       <div class="term-bar">
         <span class="d r"></span><span class="d y"></span><span class="d g"></span>
         <span class="title">taikkyithar@server: ~</span>
       </div>
-      <div class="term-body">
-        <div class="line" data-type><span class="cmd">$</span> whoami</div>
-        <div class="line" data-type><span class="val">system_engineer</span></div>
-        <div class="line" data-type><span class="cmd">$</span> cat profile.yml</div>
-        <div class="line" data-type><span class="key">role</span>: <span class="val">System Engineer</span></div>
-        <div class="line" data-type><span class="key">focus</span>: <span class="val">[infra, automation, uptime]</span></div>
-        <div class="line" data-type><span class="key">os</span>: <span class="val">Linux / Windows Server</span></div>
-        <div class="line" data-type><span class="key">cloud</span>: <span class="val">AWS · Docker · K8s</span></div>
-        <div class="line" data-type><span class="key">uptime</span>: <span class="val">99.9%</span> <span class="comment"># and counting</span></div>
-        <div class="line"><span class="cmd">$</span> <span class="cursor" id="termCaret"></span></div>
+      <div class="term-body" id="termBody">
+        {%- comment -%}
+          Static fallback. The typing engine wipes this and replays it as a live
+          session; without JS (or with reduced motion) this is what stands.
+        {%- endcomment -%}
+        <div class="term-screen" id="termScreen">
+          <div class="line"><span class="cmd">$</span> whoami</div>
+          <div class="line"><span class="val">system_engineer</span></div>
+          <div class="line"><span class="cmd">$</span> cat profile.yml</div>
+          <div class="line"><span class="key">role</span>: <span class="val">System Engineer</span></div>
+          <div class="line"><span class="key">focus</span>: <span class="val">[infra, automation, uptime]</span></div>
+          <div class="line"><span class="key">os</span>: <span class="val">Linux / Windows Server</span></div>
+          <div class="line"><span class="key">cloud</span>: <span class="val">AWS · Docker · K8s</span></div>
+          <div class="line"><span class="key">uptime</span>: <span class="val">99.9%</span> <span class="comment"># and counting</span></div>
+          <div class="line"><span class="cmd">$</span> <span class="cursor"></span></div>
+        </div>
       </div>
+      <div class="scan" aria-hidden="true"></div>
     </div>
   </section>
 
