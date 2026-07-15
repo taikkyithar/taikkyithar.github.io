@@ -651,9 +651,22 @@ a.tag:hover { color: var(--brand); border-color: var(--brand); transform: transl
 }
 .tl-item:hover::before { transform: scale(1.35); box-shadow: 0 0 18px var(--brand); }
 .tl-item .when { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .8rem; color: var(--brand); }
+.tl-item .when .dur { color: var(--muted); opacity: .75; }
 .tl-item h3 { margin: .3rem 0 .2rem; font-size: 1.15rem; }
-.tl-item .org { color: var(--muted); font-size: .92rem; margin-bottom: .5rem; }
+.tl-item .org { color: var(--text); font-size: .92rem; font-weight: 500; }
+.tl-item .org .type { color: var(--muted); font-weight: 400; }
+.tl-item .where {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .74rem;
+  color: var(--muted);
+  opacity: .8;
+  margin: .15rem 0 .6rem;
+}
 .tl-item p { color: var(--muted); margin: 0; }
+.tl-item ul { color: var(--muted); margin: 0; padding-left: 1.05rem; }
+.tl-item li { margin: .2rem 0; }
+.tl-item li::marker { color: var(--brand); }
+.tl-item .tags { margin-top: .85rem; }
 
 /* ---------- Blog ---------- */
 .posts-grid {
