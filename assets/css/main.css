@@ -21,6 +21,9 @@
   --ease: cubic-bezier(.22, .68, .16, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --spotlight: rgba(56, 189, 248, .14);
+  /* Unfilled slider/meter track. --bg-soft is nearly identical to --card, so on
+     a panel it reads as no track at all. */
+  --track: rgba(230, 236, 247, .14);
 }
 
 [data-theme="light"] {
@@ -35,6 +38,7 @@
   --accent: #0891b2;
   --shadow: 0 20px 45px -24px rgba(15, 30, 56, 0.25);
   --spotlight: rgba(2, 132, 199, .10);
+  --track: rgba(15, 30, 56, .14);
 }
 
 /* ---------- Base ---------- */
@@ -920,7 +924,7 @@ a.tag:hover { color: var(--brand); border-color: var(--brand); transform: transl
 }
 
 /* Featured single result */
-.uuid-feature {
+.tool-feature {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -928,7 +932,7 @@ a.tag:hover { color: var(--brand); border-color: var(--brand); transform: transl
   border-bottom: 1px solid var(--card-border);
   background: linear-gradient(135deg, var(--spotlight), transparent 60%);
 }
-.uuid-feature output {
+.tool-feature output {
   flex: 1;
   min-width: 0;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
@@ -939,7 +943,7 @@ a.tag:hover { color: var(--brand); border-color: var(--brand); transform: transl
   white-space: nowrap;
   color: var(--text);
 }
-.uuid-feature output.flash { animation: flash-in .45s var(--ease-out); }
+.tool-feature output.flash { animation: flash-in .45s var(--ease-out); }
 @keyframes flash-in {
   0%   { opacity: 0; transform: translateY(-6px); color: var(--brand); }
   100% { opacity: 1; transform: none; }
@@ -955,7 +959,9 @@ a.tag:hover { color: var(--brand); border-color: var(--brand); transform: transl
   border-bottom: 1px solid var(--card-border);
 }
 .field { display: flex; flex-direction: column; gap: .4rem; }
-.field label {
+/* Direct child only — .switch is also a <label>, and uppercasing it would
+   render the "a-z" and "A-Z" toggles identically. */
+.field > label {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: .72rem;
   text-transform: uppercase;
@@ -1015,6 +1021,98 @@ a.tag:hover { color: var(--brand); border-color: var(--brand); transform: transl
 .switch:has(input:checked) { color: var(--text); border-color: color-mix(in srgb, var(--brand) 45%, var(--card-border)); }
 .switch input:focus-visible + .track { outline: 2px solid var(--brand); outline-offset: 2px; }
 
+/* Range slider — JS keeps --pct in sync so the filled half tracks the thumb */
+.slider-row { display: flex; align-items: center; gap: .9rem; }
+.slider-value {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+  min-width: 2.5ch;
+  text-align: right;
+}
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  min-width: 170px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    var(--brand) 0 var(--pct, 50%),
+    var(--track) var(--pct, 50%) 100%);
+  cursor: pointer;
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--brand);
+  border: 3px solid var(--card);
+  box-shadow: 0 0 0 1px var(--brand), 0 0 12px -2px var(--brand);
+  cursor: pointer;
+  transition: transform .15s var(--ease-out);
+}
+.slider::-webkit-slider-thumb:hover { transform: scale(1.18); }
+.slider::-moz-range-thumb {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--brand);
+  border: 3px solid var(--card);
+  box-shadow: 0 0 0 1px var(--brand), 0 0 12px -2px var(--brand);
+  cursor: pointer;
+}
+.slider::-moz-range-track { background: transparent; }
+.slider:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
+
+/* Strength meter — JS sets --sc (band colour) and the fill width */
+.strength {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .9rem 1.6rem;
+  border-bottom: 1px solid var(--card-border);
+}
+.strength-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+.strength-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--sc, var(--muted));
+  transition: width .45s var(--ease-out), background .45s ease;
+}
+.strength-label {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--sc, var(--muted));
+  flex: none;
+}
+.strength-bits {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .74rem;
+  color: var(--muted);
+  flex: none;
+}
+@media (max-width: 620px) {
+  .strength-bits { display: none; }
+}
+
+/* Character-class colouring for generated passwords */
+.pw-d { color: var(--accent); }
+.pw-s { color: var(--brand-2); }
+
 .tool-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1052,8 +1150,8 @@ kbd {
 }
 
 /* Result list */
-.uuid-list { border-top: 1px solid var(--card-border); }
-.uuid-row {
+.tool-list { border-top: 1px solid var(--card-border); }
+.tool-row {
   display: flex;
   align-items: center;
   gap: .8rem;
@@ -1061,9 +1159,9 @@ kbd {
   border-bottom: 1px solid color-mix(in srgb, var(--card-border) 60%, transparent);
   animation: fade-up .4s var(--ease-out) both;
 }
-.uuid-row:last-child { border-bottom: 0; }
-.uuid-row:hover { background: color-mix(in srgb, var(--brand) 6%, transparent); }
-.uuid-row .idx {
+.tool-row:last-child { border-bottom: 0; }
+.tool-row:hover { background: color-mix(in srgb, var(--brand) 6%, transparent); }
+.tool-row .idx {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   font-size: .72rem;
   color: var(--muted);
@@ -1071,7 +1169,7 @@ kbd {
   text-align: right;
   flex: none;
 }
-.uuid-row code {
+.tool-row code {
   flex: 1;
   min-width: 0;
   font-family: 'JetBrains Mono', ui-monospace, monospace;

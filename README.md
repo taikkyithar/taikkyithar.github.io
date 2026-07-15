@@ -51,11 +51,13 @@ assets/
   css/main.css       all styles
   js/main.js         all behaviour
   js/uuid.js         UUID generator (loaded only on its own page)
+  js/password.js     Password generator (loaded only on its own page)
 index.html           homepage
 blog.html            post index (/blog/)
 tools.html           tools index (/tools/)
 tools/
-  uuid-generator.html   UUID Generator (/tools/uuid-generator/)
+  uuid-generator.html      UUID Generator (/tools/uuid-generator/)
+  password-generator.html  Password Generator (/tools/password-generator/)
 ```
 
 ## Adding a tool

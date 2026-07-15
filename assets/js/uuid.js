@@ -105,7 +105,7 @@
     var frag = document.createDocumentFragment();
     uuids.forEach(function (raw, i) {
       var row = document.createElement('div');
-      row.className = 'uuid-row';
+      row.className = 'tool-row';
       // Stagger only the first rows — 1000 staggered rows would crawl.
       if (!reduced && i < 25) row.style.animationDelay = (i * 22) + 'ms';
       else row.style.animation = 'none';
