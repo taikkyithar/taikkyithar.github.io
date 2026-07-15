@@ -1,0 +1,29 @@
+name: Build check
+
+# GitHub Pages builds and deploys this site itself from the `main` branch.
+# This workflow is only a safety net: it fails the push/PR if the site does not
+# build, so a broken Liquid tag or bad front matter surfaces here instead of as
+# a silent Pages build failure email.
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec jekyll build --trace
+        env:
+          JEKYLL_ENV: production
