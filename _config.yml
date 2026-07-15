@@ -1,0 +1,52 @@
+title: Taikkyithar
+tagline: System Engineer
+description: >-
+  System Engineer specializing in Linux infrastructure, cloud, automation,
+  and network reliability.
+
+url: "https://taikkyithar.github.io"
+baseurl: ""
+
+author:
+  name: Taikkyithar
+  email: 7th.tech1@gmail.com
+
+github_username: taikkyithar
+social_links:
+  github: https://github.com/taikkyithar
+  linkedin: https://www.linkedin.com/
+  email: 7th.tech1@gmail.com
+
+# ----- Blog -----
+permalink: /blog/:title/
+words_per_minute: 200
+
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+feed:
+  path: /feed.xml
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      comments: false
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - .github
+  - node_modules

@@ -1,0 +1,61 @@
+---
+layout: default
+title: Blog
+description: Notes from the terminal — Linux, cloud, automation, networking, and the homelab.
+permalink: /blog/
+---
+
+<div class="wrap">
+  <section>
+
+    <div class="section-head reveal">
+      <div class="eyebrow">// writing</div>
+      <h2>Notes from the terminal</h2>
+      <p>What I build, break, and fix — in production and in the homelab. {{ site.posts.size }} post{% if site.posts.size != 1 %}s{% endif %} and counting.</p>
+    </div>
+
+    {%- if site.posts.size > 0 %}
+
+    {%- if site.tags.size > 0 %}
+    <div class="filter-bar reveal" id="filterBar" role="group" aria-label="Filter posts by tag">
+      <button class="filter-btn" data-tag="all" aria-pressed="true">all</button>
+      {%- for tag in site.tags %}
+      <button class="filter-btn" data-tag="{{ tag[0] | slugify }}" aria-pressed="false">{{ tag[0] }} <span style="opacity:.6">{{ tag[1].size }}</span></button>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+
+    <div class="posts-grid" id="postList" data-stagger>
+      {%- for post in site.posts %}
+      {%- assign words = post.content | number_of_words -%}
+      {%- assign minutes = words | divided_by: site.words_per_minute | plus: 1 -%}
+      {%- capture tagslugs %}{% for t in post.tags %}{{ t | slugify }} {% endfor %}{% endcapture -%}
+      <article class="post-card reveal spotlight" data-tags="{{ tagslugs | strip }}">
+        <div class="meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+          <span class="sep">·</span>
+          <span>{{ minutes }} min read</span>
+        </div>
+        <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+        <p class="excerpt">{{ post.description | default: post.excerpt | strip_html | truncate: 160 }}</p>
+        {%- if post.tags.size > 0 %}
+        <div class="tags" style="margin-bottom:1.2rem;">
+          {%- for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+        </div>
+        {%- endif %}
+        <a class="read" href="{{ post.url | relative_url }}">
+          Read post
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </article>
+      {%- endfor %}
+    </div>
+
+    <p class="empty-state" id="emptyState" hidden>No posts with that tag yet.</p>
+
+    {%- else %}
+    <p style="color:var(--muted);">No posts yet — the first one is being written.</p>
+    {%- endif %}
+
+  </section>
+</div>
