@@ -50,9 +50,22 @@ _posts/              blog posts (Markdown)
 assets/
   css/main.css       all styles
   js/main.js         all behaviour
+  js/uuid.js         UUID generator (loaded only on its own page)
 index.html           homepage
 blog.html            post index (/blog/)
+tools.html           tools index (/tools/)
+tools/
+  uuid-generator.html   UUID Generator (/tools/uuid-generator/)
 ```
+
+## Adding a tool
+
+Tools are standalone pages under `tools/` with their own `permalink`, plus a card on
+`tools.html` linking to them. Page-specific JavaScript goes in its own file under
+`assets/js/` and is loaded with a `<script>` tag at the bottom of that page, so it
+only ships to the page that needs it.
+
+Everything runs client-side — no build step, no API, nothing leaves the browser.
 
 ## Running locally
 

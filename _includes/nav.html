@@ -12,6 +12,7 @@
         On /blog/ pages there are no spied sections, so the static .active stands.
       {%- endcomment -%}
       <a href="{{ '/blog/' | relative_url }}" data-nav="blog"{% if page.url contains '/blog' %} class="active" aria-current="page"{% endif %}>Blog</a>
+      <a href="{{ '/tools/' | relative_url }}"{% if page.url contains '/tools' %} class="active" aria-current="page"{% endif %}>Tools</a>
       <a href="{{ home }}#contact" data-nav="contact">Contact</a>
     </nav>
 
