@@ -1,0 +1,142 @@
+---
+layout: default
+title: What Is My IP — IP Address Lookup & Geolocation
+description: Free IP address checker. See your public IP plus ASN, company, range, geolocation, timezone, and coordinates — or look up any IP address, right in your browser.
+permalink: /tools/ip-checker/
+---
+
+<div class="wrap">
+
+  <header class="tool-hero">
+    <a href="{{ '/tools/' | relative_url }}" class="back-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All tools
+    </a>
+
+    <h1>What is my IP?</h1>
+    <p>Your public IP address with a full <strong style="color:var(--text);">summary</strong> and <strong style="color:var(--text);">geolocation</strong> breakdown — ASN, company, range, city, timezone, and coordinates. Look up any other IP too.</p>
+
+    <span class="privacy-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Lookups run from your browser via a keyless public API — no logs kept here
+    </span>
+  </header>
+
+  <section style="padding-top:1.5rem;">
+    <div class="tool-panel reveal">
+
+      <!-- Featured IP -->
+      <div class="tool-feature">
+        <output id="ipFeature" aria-live="polite" aria-label="IP address">Detecting your IP…</output>
+        <button class="copy-btn" id="copyIp" aria-label="Copy IP address">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Copy</span>
+        </button>
+      </div>
+
+      <!-- Lookup any IP -->
+      <form class="ip-lookup" id="ipForm" autocomplete="off">
+        <input type="text" id="ipInput" name="ip" inputmode="text" spellcheck="false"
+               placeholder="Look up any IP, e.g. 8.8.8.8 or 2606:4700:4700::1111"
+               aria-label="IP address to look up">
+        <button class="btn btn-primary" type="submit" id="lookupBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Look up
+        </button>
+        <button class="btn btn-ghost" type="button" id="myIpBtn">My IP</button>
+      </form>
+
+      <p class="ip-error" id="ipError" role="alert"></p>
+
+      <!-- Result -->
+      <div class="ip-panel" id="ipPanel">
+        <div class="ip-grid">
+
+          <!-- Summary -->
+          <div class="ip-block">
+            <h3>Summary</h3>
+            <div class="ip-table">
+              <div class="ip-row"><span class="ip-key">Location</span><span class="ip-val" id="f-location">—</span></div>
+              <div class="ip-row"><span class="ip-key">ASN</span><span class="ip-val mono" id="f-asn">—</span></div>
+              <div class="ip-row"><span class="ip-key">Hostname</span><span class="ip-val mono" id="f-hostname">—</span></div>
+              <div class="ip-row"><span class="ip-key">Range</span><span class="ip-val mono" id="f-range">—</span></div>
+              <div class="ip-row"><span class="ip-key">Company</span><span class="ip-val" id="f-company">—</span></div>
+              <div class="ip-row"><span class="ip-key">Hosted domains</span><span class="ip-val" id="f-domains">—</span></div>
+              <div class="ip-row"><span class="ip-key">Privacy</span><span class="ip-val" id="f-privacy">—</span></div>
+              <div class="ip-row"><span class="ip-key">Anycast</span><span class="ip-val" id="f-anycast">—</span></div>
+              <div class="ip-row"><span class="ip-key">AS Type</span><span class="ip-val" id="f-astype">—</span></div>
+            </div>
+          </div>
+
+          <!-- IP Geolocation -->
+          <div class="ip-block">
+            <h3>IP Geolocation</h3>
+            <div class="ip-table">
+              <div class="ip-row"><span class="ip-key">City</span><span class="ip-val" id="f-city">—</span></div>
+              <div class="ip-row"><span class="ip-key">State / Region</span><span class="ip-val" id="f-state">—</span></div>
+              <div class="ip-row"><span class="ip-key">Country</span><span class="ip-val" id="f-country">—</span></div>
+              <div class="ip-row"><span class="ip-key">Postal</span><span class="ip-val mono" id="f-postal">—</span></div>
+              <div class="ip-row"><span class="ip-key">Local time</span><span class="ip-val mono" id="f-localtime">—</span></div>
+              <div class="ip-row"><span class="ip-key">Timezone</span><span class="ip-val mono" id="f-timezone">—</span></div>
+              <div class="ip-row"><span class="ip-key">Coordinates</span><span class="ip-val mono" id="f-coords">—</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="ip-foot">
+          Fields shown as <code>—</code> (hosted domains, privacy/VPN detection, anycast, AS type) require a commercial
+          IP-intelligence provider such as IPinfo's paid tiers. This tool uses free, keyless lookups, so it fills what it can.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== Explainer ===== -->
+  <section style="padding-top:3rem;">
+    <div class="prose reveal">
+      <h2>What is an IP address?</h2>
+      <p>An <strong>IP address</strong> (Internet Protocol address) is the number your device uses to send and receive data on a network. Your <em>public</em> IP is the one the rest of the internet sees — assigned by your ISP or hosting provider — and it's what this page detects. There are two versions in use today:</p>
+      <ul>
+        <li><strong>IPv4</strong> — four numbers like <code>203.0.113.24</code>. About 4.3&nbsp;billion addresses, which the internet long ago outgrew.</li>
+        <li><strong>IPv6</strong> — eight groups of hex like <code>2606:4700:4700::1111</code>. A vastly larger space built to replace IPv4.</li>
+      </ul>
+
+      <h2>What the summary fields mean</h2>
+      <ul>
+        <li><strong>ASN</strong> — the Autonomous System Number of the network that announces your IP (e.g. <code>AS15169</code> is Google). It identifies <em>who routes</em> your traffic.</li>
+        <li><strong>Range</strong> — the CIDR block your IP belongs to, such as <code>8.8.8.0/24</code>.</li>
+        <li><strong>Company / Hostname</strong> — the organisation operating the network and the reverse-DNS name of the host, if one is set.</li>
+        <li><strong>Privacy &amp; AS Type</strong> — whether the IP looks like a VPN, proxy, hosting, or business connection. These are inference features that commercial datasets provide.</li>
+      </ul>
+
+      <h2>How accurate is IP geolocation?</h2>
+      <p>Geolocation maps an IP to a place using registration and routing data — not GPS. <strong>Country-level accuracy is very high; city-level is a best guess.</strong> Mobile networks, VPNs, and corporate routing can put you hundreds of kilometres from where the data says. Treat the city and coordinates as approximate.</p>
+
+      <h2>Find your IP from the command line</h2>
+      <pre><code>{% raw %}# Public IP (any OS with curl)
+curl https://ipwho.is/ | jq .ip
+curl https://ifconfig.me
+
+# Linux / macOS — local interface addresses
+ip addr            # Linux
+ifconfig           # macOS / BSD
+
+# Windows
+ipconfig
+
+# Reverse DNS (hostname) for an IP
+dig -x 8.8.8.8 +short
+nslookup 8.8.8.8{% endraw %}</code></pre>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastText">Copied</span>
+</div>
+
+<script src="{{ '/assets/js/ip-checker.js' | relative_url }}" defer></script>
