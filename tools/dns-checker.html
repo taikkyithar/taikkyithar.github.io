@@ -1,0 +1,132 @@
+---
+layout: default
+title: DNS Checker — DNS Propagation & Record Lookup
+description: Free DNS checker and propagation tool. Look up A, AAAA, CNAME, MX, NS, TXT, SOA, CAA and more across multiple public DNS resolvers worldwide — right in your browser.
+permalink: /tools/dns-checker/
+---
+
+<div class="wrap">
+
+  <header class="tool-hero">
+    <a href="{{ '/tools/' | relative_url }}" class="back-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All tools
+    </a>
+
+    <h1>DNS Checker</h1>
+    <p>Check <strong style="color:var(--text);">DNS propagation</strong> for any domain across several public DNS resolvers worldwide. Changed a record, moved hosts, or launched a new site? Confirm the update has spread — look up <strong style="color:var(--text);">A, AAAA, CNAME, MX, NS, TXT, SOA, CAA</strong> and more.</p>
+
+    <span class="privacy-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Queries run from your browser over DNS-over-HTTPS — no logs kept here
+    </span>
+  </header>
+
+  <section style="padding-top:1.5rem;">
+    <div class="tool-panel reveal">
+
+      <!-- Lookup form -->
+      <form class="dns-form" id="dnsForm" autocomplete="off">
+        <input type="text" id="dnsInput" name="domain" inputmode="url" spellcheck="false"
+               placeholder="example.com"
+               aria-label="Domain or hostname to look up">
+        <label class="dns-type" aria-label="DNS record type">
+          <select id="dnsType">
+            <option value="A" selected>A</option>
+            <option value="AAAA">AAAA</option>
+            <option value="CNAME">CNAME</option>
+            <option value="MX">MX</option>
+            <option value="NS">NS</option>
+            <option value="TXT">TXT</option>
+            <option value="SOA">SOA</option>
+            <option value="CAA">CAA</option>
+            <option value="SRV">SRV</option>
+            <option value="PTR">PTR</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit" id="dnsBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Search
+        </button>
+      </form>
+
+      <p class="dns-error" id="dnsError" role="alert"></p>
+
+      <!-- Consensus summary -->
+      <div class="dns-summary" id="dnsSummary" hidden>
+        <div class="dns-summary-main">
+          <span class="dns-query" id="dnsQuery">—</span>
+          <span class="dns-badge" id="dnsBadge"></span>
+        </div>
+        <div class="dns-summary-sub" id="dnsProgress">Querying resolvers…</div>
+      </div>
+
+      <!-- Per-resolver results -->
+      <div class="dns-results" id="dnsResults" aria-live="polite"></div>
+
+      <p class="dns-foot" id="dnsFoot" hidden>
+        A green check means that resolver's answer matches the majority — the record has <strong>propagated</strong> there.
+        An amber mark means it still returns an older or different answer, or the record is missing.
+        Anycast networks (Cloudflare, Quad9) answer from the nearest datacentre, so their location reflects routing, not a single site.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ===== Explainer ===== -->
+  <section style="padding-top:3rem;">
+    <div class="prose reveal">
+      <h2>What is DNS propagation?</h2>
+      <p>The <strong>Domain Name System (DNS)</strong> is the internet's address book: it turns a human name like <code>example.com</code> into the IP address a machine actually connects to. When you change a DNS record, that update starts at your authoritative name servers and has to spread to the thousands of <em>recursive resolvers</em> around the world that answer queries for everyone else. <strong>Propagation</strong> is that spreading — and it isn't instant.</p>
+      <p>Each record carries a <strong>TTL</strong> (time to live) in seconds. A resolver is allowed to cache the old answer until the TTL expires, so a record with a 3600-second TTL can keep serving the previous value for up to an hour after you change it. This tool asks several independent public resolvers the same question at once and shows you who has the new answer and who is still serving the old one.</p>
+
+      <h2>Common DNS record types</h2>
+      <table>
+        <thead><tr><th>Type</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>A</code></td><td>Maps a name to an IPv4 address.</td></tr>
+          <tr><td><code>AAAA</code></td><td>Maps a name to an IPv6 address.</td></tr>
+          <tr><td><code>CNAME</code></td><td>Alias — points one name at another name.</td></tr>
+          <tr><td><code>MX</code></td><td>Mail exchange — where email for the domain is delivered.</td></tr>
+          <tr><td><code>NS</code></td><td>The authoritative name servers for the domain.</td></tr>
+          <tr><td><code>TXT</code></td><td>Arbitrary text — SPF, DKIM, domain verification, and more.</td></tr>
+          <tr><td><code>SOA</code></td><td>Start of authority — the zone's primary server and serial number.</td></tr>
+          <tr><td><code>CAA</code></td><td>Which certificate authorities may issue certs for the domain.</td></tr>
+          <tr><td><code>SRV</code></td><td>Locates a service (host and port) for a protocol.</td></tr>
+          <tr><td><code>PTR</code></td><td>Reverse lookup — maps an IP back to a name.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Why do resolvers disagree?</h2>
+      <p>Right after a change, some resolvers have already fetched the new record while others are still inside the old TTL window — so they legitimately return different answers for a while. Geographic anycast, split-horizon DNS, and aggressive caching by ISPs can also cause differences. If every resolver above agrees, your change has fully propagated. If they don't, give it up to the record's TTL and check again.</p>
+
+      <h2>Check DNS from the command line</h2>
+      <pre><code>{% raw %}# Query a record with dig (Linux / macOS)
+dig example.com A +short
+dig example.com MX +short
+dig NS example.com +short
+
+# Ask a specific resolver (here, Google & Cloudflare)
+dig @8.8.8.8 example.com A +short
+dig @1.1.1.1 example.com A +short
+
+# See the TTL still counting down
+dig example.com A            # look at the number before the record
+
+# Windows
+nslookup -type=A example.com
+nslookup -type=MX example.com 8.8.8.8
+
+# Reverse (PTR) lookup for an IP
+dig -x 8.8.8.8 +short{% endraw %}</code></pre>
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastText">Copied</span>
+</div>
+
+<script src="{{ '/assets/js/dns-checker.js' | relative_url }}" defer></script>

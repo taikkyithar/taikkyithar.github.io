@@ -1393,6 +1393,164 @@ kbd {
 }
 .ip-foot code { font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--text); }
 
+/* ---------- DNS Checker ---------- */
+.dns-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .7rem;
+  padding: 1.4rem 1.6rem;
+  border-bottom: 1px solid var(--card-border);
+}
+.dns-form input {
+  flex: 1;
+  min-width: 200px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .92rem;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: .6rem .85rem;
+  transition: border-color .2s;
+}
+.dns-form input:focus { outline: none; border-color: var(--brand); }
+.dns-form input::placeholder { color: var(--muted); }
+.dns-type { display: flex; }
+.dns-type select {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: .6rem .8rem;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+.dns-type select:hover { border-color: var(--brand); }
+.dns-type select:focus { outline: none; border-color: var(--brand); }
+
+/* Consensus summary bar */
+.dns-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem 1.2rem;
+  padding: 1.1rem 1.6rem;
+  border-bottom: 1px solid var(--card-border);
+  background: linear-gradient(135deg, var(--spotlight), transparent 60%);
+}
+.dns-summary-main { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; }
+.dns-query {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-all;
+}
+.dns-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .78rem;
+  font-weight: 600;
+  padding: .28rem .7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.dns-badge svg { width: 13px; height: 13px; }
+.dns-badge.ok {
+  color: #34d399;
+  background: color-mix(in srgb, #34d399 14%, transparent);
+  border: 1px solid color-mix(in srgb, #34d399 34%, transparent);
+}
+.dns-badge.warn {
+  color: #fbbf24;
+  background: color-mix(in srgb, #fbbf24 14%, transparent);
+  border: 1px solid color-mix(in srgb, #fbbf24 34%, transparent);
+}
+.dns-summary-sub { font-size: .84rem; color: var(--muted); }
+
+/* Resolver rows */
+.dns-results { display: flex; flex-direction: column; }
+.dns-server {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.6rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--card-border) 60%, transparent);
+}
+.dns-server:last-child { border-bottom: 0; }
+.dns-flag { font-size: 1.35rem; line-height: 1; flex: none; }
+.dns-meta { display: flex; flex-direction: column; gap: .15rem; flex: none; width: 8.5rem; min-width: 0; }
+.dns-name { font-size: .92rem; font-weight: 600; color: var(--text); }
+.dns-loc { font-size: .74rem; color: var(--muted); }
+.dns-records {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+}
+.dns-rec {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .82rem;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--card-border);
+  border-radius: 7px;
+  padding: .22rem .5rem;
+  cursor: pointer;
+  word-break: break-all;
+  transition: border-color .2s, color .2s;
+}
+.dns-rec:hover { border-color: var(--brand); color: var(--brand); }
+.dns-ttl {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .72rem;
+  color: var(--muted);
+}
+.dns-empty, .dns-wait { font-size: .85rem; color: var(--muted); }
+.dns-wait { font-style: italic; }
+
+.dns-status { flex: none; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; }
+.dns-status svg { width: 20px; height: 20px; }
+.dns-status.ok { color: #34d399; }
+.dns-status.warn { color: #fbbf24; }
+.dns-status.err { color: #f87171; }
+.dns-server.pending .dns-status { color: var(--muted); }
+.dns-server.pending .dns-status svg { animation: dns-spin 1s linear infinite; }
+@keyframes dns-spin { to { transform: rotate(360deg); } }
+.dns-server.unreachable { opacity: .72; }
+
+.dns-error {
+  margin: 0;
+  padding: 1.2rem 1.6rem;
+  color: #f87171;
+  font-size: .9rem;
+  border-bottom: 1px solid var(--card-border);
+  display: none;
+}
+.dns-error.show { display: block; }
+
+.dns-foot {
+  padding: 1rem 1.6rem 1.3rem;
+  font-size: .78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--card-border);
+  line-height: 1.6;
+}
+.dns-foot strong { color: var(--text); }
+
+@media (max-width: 620px) {
+  .dns-server { flex-wrap: wrap; }
+  .dns-meta { width: auto; flex: 1; }
+  .dns-records { flex-basis: 100%; order: 3; }
+}
+
 /* ---------- Contact ---------- */
 .contact-card {
   position: relative;
