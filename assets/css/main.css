@@ -1623,6 +1623,25 @@ footer.site {
 }
 .foot-inner .socials { margin-top: 0; }
 .foot-inner .socials a { width: 38px; height: 38px; }
+.foot-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--muted);
+  font-size: .88rem;
+  text-decoration: none;
+  transition: color .25s, border-color .25s, transform .2s var(--ease-out), box-shadow .25s;
+}
+.foot-links a:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -12px var(--brand);
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
