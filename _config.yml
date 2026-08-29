@@ -1,15 +1,31 @@
 title: Taikkyithar
 tagline: IT Support Specialist
 description: >-
-  IT Support Specialist in Myanmar — Linux, security, and the hardware,
-  systems, and networks behind them.
+  Taikkyithar — IT Support Specialist in Myanmar. A decade from mobile hardware
+  repair to IT administration, plus Linux, security, and homelab writing.
 
 url: "https://taikkyithar.github.io"
 baseurl: ""
 
+# Default share card. Individual pages override this with their own `image:`.
+image: /assets/og-image.png
+lang: en_US
+
 author:
   name: Taikkyithar
   email: 7th.tech1@gmail.com
+
+twitter:
+  card: summary_large_image
+
+# Consumed by jekyll-seo-tag for the schema.org `sameAs` list. Only add
+# profiles that really exist — a placeholder here is a bad signal to search
+# engines, so the LinkedIn link below stays out until it points at a profile.
+social:
+  name: Taikkyithar
+  type: Person
+  links:
+    - https://github.com/taikkyithar
 
 github_username: taikkyithar
 social_links:

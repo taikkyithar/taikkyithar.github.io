@@ -1,0 +1,110 @@
+{%- comment -%}
+  Structured data that jekyll-seo-tag does not emit on its own.
+
+  seo-tag already outputs a WebPage/BlogPosting node with the title,
+  description, canonical URL and author. This adds the pieces that earn richer
+  results: the Person entity behind the site, breadcrumb trails so search
+  engines show the section rather than a bare URL, and a WebApplication node
+  for each tool page.
+
+  Every string goes through `jsonify`, which emits its own quotes and escapes
+  anything that would otherwise break the JSON.
+{%- endcomment -%}
+
+{%- if page.url == '/' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": {{ '/#person' | absolute_url | jsonify }},
+  "name": {{ site.author.name | jsonify }},
+  "url": {{ '/' | absolute_url | jsonify }},
+  "image": {{ site.image | absolute_url | jsonify }},
+  "jobTitle": {{ site.tagline | jsonify }},
+  "email": {{ site.author.email | jsonify }},
+  "description": {{ site.description | strip_newlines | strip | jsonify }},
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "MM"
+  },
+  "knowsAbout": [
+    "IT Support",
+    "Linux system administration",
+    "Information security",
+    "Computer networking",
+    "Virtualization",
+    "Infrastructure as code",
+    "Monitoring and observability",
+    "Hardware repair"
+  ]{%- if site.social.links.size > 0 -%},
+  "sameAs": {{ site.social.links | jsonify }}
+  {%- endif %}
+}
+</script>
+{%- endif -%}
+
+{%- comment -%} Breadcrumbs: Home › Section › Page {%- endcomment -%}
+{%- assign crumb_section = '' -%}
+{%- assign crumb_section_url = '' -%}
+{%- if page.url contains '/tools/' and page.url != '/tools/' -%}
+  {%- assign crumb_section = 'Tools' -%}
+  {%- assign crumb_section_url = '/tools/' -%}
+{%- elsif page.layout == 'post' -%}
+  {%- assign crumb_section = 'Blog' -%}
+  {%- assign crumb_section_url = '/blog/' -%}
+{%- endif -%}
+
+{%- if crumb_section != '' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ '/' | absolute_url | jsonify }}
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ crumb_section | jsonify }},
+      "item": {{ crumb_section_url | absolute_url | jsonify }}
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ page.tool_name | default: page.title | jsonify }},
+      "item": {{ page.url | absolute_url | jsonify }}
+    }
+  ]
+}
+</script>
+{%- endif -%}
+
+{%- if page.tool_name -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": {{ page.tool_name | jsonify }},
+  "url": {{ page.url | absolute_url | jsonify }},
+  "description": {{ page.description | jsonify }},
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": {{ site.author.name | jsonify }},
+    "url": {{ '/' | absolute_url | jsonify }}
+  }
+}
+</script>
+{%- endif -%}

@@ -1,8 +1,31 @@
+---
+# Front matter only so `sitemap: false` is honoured — the page is noindex,
+# so it has no business in sitemap.xml either. `layout: null` keeps the
+# bundled document exactly as it is; there is no Liquid in it to expand.
+layout: null
+permalink: /thethtoosan_cv.html
+sitemap: false
+---
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Bundled Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV — Thet Htoo San, IT Support Specialist | Taikkyithar</title>
+  <meta name="description" content="Curriculum vitae of Thet Htoo San (Taikkyithar) — IT support specialist in Myanmar, with over ten years across Windows and Linux administration, cloud servers, Odoo ERP support and hardware repair.">
+  <meta name="theme-color" content="#16283C">
+  <!-- The CV renders client-side, so crawlers see an empty page, and the same
+       career history is already on the homepage in crawlable HTML. Kept out of
+       the index; the link still works for anyone who follows it. -->
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://taikkyithar.github.io/thethtoosan_cv.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="CV — Thet Htoo San, IT Support Specialist">
+  <meta property="og:description" content="Over ten years across Windows and Linux administration, cloud servers, Odoo ERP support and hardware repair.">
+  <meta property="og:url" content="https://taikkyithar.github.io/thethtoosan_cv.html">
+  <meta property="og:image" content="https://taikkyithar.github.io/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #16283C; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }

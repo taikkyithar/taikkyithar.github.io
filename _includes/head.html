@@ -3,8 +3,21 @@
 <meta name="theme-color" content="#0b1120">
 <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
 
+{%- comment -%}
+  max-image-preview:large lets Google use the full-width share card in results;
+  pages that opt out (the 404) set `noindex: true` in their front matter.
+{%- endcomment -%}
+{%- if page.noindex -%}
+<meta name="robots" content="noindex, follow">
+{%- else -%}
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+{%- endif -%}
+
 {%- seo -%}
 {%- feed_meta -%}
+{%- include schema.html -%}
+
+<link rel="sitemap" type="application/xml" title="Sitemap" href="{{ '/sitemap.xml' | relative_url }}">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

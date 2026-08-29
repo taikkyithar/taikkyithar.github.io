@@ -1,0 +1,16 @@
+---
+permalink: /robots.txt
+layout: null
+sitemap: false
+---
+# https://taikkyithar.github.io — everything here is public and crawlable.
+User-agent: *
+Allow: /
+
+# Jekyll's build output, not content.
+Disallow: /404.html
+
+# The CV is noindex (it renders client-side); left crawlable so the
+# noindex tag can actually be read.
+
+Sitemap: {{ '/sitemap.xml' | absolute_url }}
