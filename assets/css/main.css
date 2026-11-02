@@ -494,6 +494,26 @@ header.nav.scrolled {
 .term-body .warn { color: #fbbf24; }
 .term-body .dim { color: var(--h-dim); }
 
+/* Lyrics mode (JS adds .lyrics): the line being typed glows mid-card,
+   sung lines dim and drift up, and both edges fade out. */
+.term-body.lyrics {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28%, #000 72%, transparent 100%);
+}
+.term-body.lyrics .term-screen {
+  transition: transform .75s var(--ease-out);
+  will-change: transform;
+}
+.term-body.lyrics .line {
+  transform-origin: 0 50%;
+  transition: opacity .6s ease, transform .6s var(--ease-out), filter .6s ease, text-shadow .6s ease;
+}
+.term-body.lyrics .line.past { opacity: .35; filter: blur(.4px); transform: scale(.97); }
+.term-body.lyrics .line.active {
+  transform: scale(1.06);
+  text-shadow: 0 0 10px rgba(52, 255, 118, .85), 0 0 22px rgba(52, 255, 118, .35);
+}
+
 /* Block caret that trails the typed text */
 .cursor {
   display: inline-block;
@@ -1843,6 +1863,96 @@ footer.site {
   .menu-btn { display: grid; }
   .aurora .blob { filter: blur(60px); }
 }
+
+/* ---------- Seasonal: Halloween ----------
+   The inline script in <head> sets data-season="halloween" from Oct 1 to Nov 7.
+   Tokens recolour the whole site; main.js adds the bats, spider and web. */
+[data-season="halloween"] {
+  --bg: #0e0a16;
+  --bg-soft: #160f22;
+  --card: #1a1228;
+  --card-border: #2e1f45;
+  --text: #f3eefb;
+  --muted: #b3a6c9;
+  --brand: #ff7a1a;
+  --brand-2: #a855f7;
+  --accent: #84cc16;
+  --spotlight: rgba(255, 122, 26, .14);
+}
+[data-season="halloween"][data-theme="light"] {
+  --bg: #fff8f1;
+  --bg-soft: #fdeedd;
+  --card: #ffffff;
+  --card-border: #f3dcc4;
+  --text: #24132f;
+  --muted: #6b5a78;
+  --brand: #ea580c;
+  --brand-2: #7c3aed;
+  --accent: #65a30d;
+  --spotlight: rgba(234, 88, 12, .10);
+}
+
+/* Logo dot becomes a little pumpkin */
+[data-season="halloween"] .logo .dot {
+  position: relative;
+  width: 15px; height: 13px;
+  border-radius: 48% 48% 45% 45%;
+  background: radial-gradient(circle at 35% 35%, #ffb347, #ff7a1a 55%, #c2410c);
+  box-shadow: 0 0 16px #ff7a1a;
+}
+[data-season="halloween"] .logo .dot::after {
+  content: "";
+  position: absolute;
+  top: -4px; left: 6px;
+  width: 3px; height: 5px;
+  border-radius: 2px;
+  background: #4d7c0f;
+  transform: rotate(14deg);
+}
+
+.spooky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.spooky .web {
+  position: absolute;
+  top: 0; left: 0;
+  width: clamp(120px, 16vw, 220px);
+  color: var(--muted);
+  opacity: .22;
+}
+.spooky .spider {
+  position: absolute;
+  top: 0; right: 7%;
+  width: 26px;
+  color: var(--text);
+  opacity: .55;
+  transform-origin: top center;
+  animation: spider-drop 9s ease-in-out infinite;
+}
+.spooky .spider .thread { stroke: var(--muted); }
+@keyframes spider-drop {
+  0%, 100% { transform: translateY(-40px) rotate(0); }
+  45%      { transform: translateY(90px) rotate(4deg); }
+  60%      { transform: translateY(70px) rotate(-3deg); }
+}
+.spooky .bat {
+  position: absolute;
+  left: -80px;
+  color: var(--brand-2);
+  opacity: .55;
+  animation: bat-fly linear infinite;
+}
+.spooky .bat svg {
+  display: block;
+  animation: bat-flap .32s ease-in-out infinite alternate, bat-bob 3s ease-in-out infinite;
+}
+@keyframes bat-fly { to { transform: translateX(calc(100vw + 160px)); } }
+@keyframes bat-flap { to { transform: scaleY(.45); } }
+@keyframes bat-bob { 50% { translate: 0 -26px; } }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {

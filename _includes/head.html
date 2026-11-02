@@ -36,5 +36,10 @@
         }
       }
     } catch (e) {}
+    // Halloween skin: on from Oct 1 to Nov 7 each year, off the rest of the year.
+    var d = new Date(), m = d.getMonth();
+    if (m === 9 || (m === 10 && d.getDate() <= 7)) {
+      document.documentElement.setAttribute('data-season', 'halloween');
+    }
   })();
 </script>

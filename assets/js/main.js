@@ -13,6 +13,43 @@
   var year = $('#year');
   if (year) year.textContent = new Date().getFullYear();
 
+  /* ---------- Seasonal: Halloween decor ---------- */
+  // <head> sets data-season; colours live in CSS, this just adds the critters.
+  if (document.documentElement.getAttribute('data-season') === 'halloween') {
+    var spooky = document.createElement('div');
+    spooky.className = 'spooky';
+    spooky.setAttribute('aria-hidden', 'true');
+
+    var web = '<svg class="web" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width=".8">' +
+      '<path d="M0 0L100 18M0 0L88 56M0 0L56 88M0 0L18 100"/>' +
+      '<path d="M25 4.5Q22 14 22 14T14 22T4.5 25"/>' +
+      '<path d="M50 9Q44 28 44 28T28 44T9 50"/>' +
+      '<path d="M75 13.5Q66 42 66 42T42 66T13.5 75"/></svg>';
+
+    var spider = '<svg class="spider" viewBox="0 0 26 120" fill="currentColor">' +
+      '<line class="thread" x1="13" y1="0" x2="13" y2="100" stroke-width=".8"/>' +
+      '<g stroke="currentColor" stroke-width="1.2" fill="none">' +
+      '<path d="M9 104L2 99M9 107L1 107M9 110L2 115M17 104L24 99M17 107L25 107M17 110L24 115"/></g>' +
+      '<ellipse cx="13" cy="102" rx="3.5" ry="3"/><ellipse cx="13" cy="109" rx="5" ry="5.5"/></svg>';
+
+    var html = web;
+    if (!reduced) {
+      html += spider;
+      var bat = '<svg width="WIDTH" viewBox="0 0 64 32" fill="currentColor"><path d="M32 10c-1.5-3-3.5-5-3.5-5s-.5 3 .5 5.5C23 10 19 4 19 4s-3 6.5-12 7.5c4.5 2 7 6 7 9.5 3-3 7.5-3 10-1 1.5-3 4.5-4.5 8-4.5s6.5 1.5 8 4.5c2.5-2 7-2 10 1 0-3.5 2.5-7.5 7-9.5C48 10.5 45 4 45 4s-4 6-10 6.5c1-2.5.5-5.5.5-5.5s-2 2-3.5 5z"/></svg>';
+      [
+        { top: 14, w: 42, dur: 24, delay: 0 },
+        { top: 32, w: 28, dur: 31, delay: 9 },
+        { top: 58, w: 36, dur: 27, delay: 17 },
+        { top: 22, w: 22, dur: 36, delay: 23 }
+      ].forEach(function (b) {
+        html += '<div class="bat" style="top:' + b.top + '%;animation-duration:' + b.dur + 's;animation-delay:' + b.delay + 's">' +
+          bat.replace('WIDTH', b.w) + '</div>';
+      });
+    }
+    spooky.innerHTML = html;
+    document.body.appendChild(spooky);
+  }
+
   /* ---------- Theme toggle ---------- */
   // The initial theme is applied by an inline script in <head> to avoid a flash.
   var root = document.documentElement;
@@ -161,10 +198,11 @@
     }
   }
 
-  /* ---------- Terminal: live hacker session ---------- */
-  // Types each command a character at a time with human-ish jitter, pauses, then
-  // streams its output, then loops. Keep output lines <= ~42 chars: .term-body is
-  // `white-space: pre` with no horizontal scroll, so longer lines get clipped.
+  /* ---------- Terminal: lyrics-style session ---------- */
+  // Plays the session like synced song lyrics: each line types out on its own,
+  // the line being "sung" glows and sits mid-card, sung lines fade and drift up.
+  // Keep lines <= ~40 chars: .term-body is `white-space: pre` and the active line
+  // is scaled up a touch, so longer lines get clipped.
   var termScreen = $('#termScreen');
   var termBody = $('#termBody');
 
@@ -208,80 +246,78 @@
       }
     ];
 
+    // Flatten into one verse: commands type slower, output faster, and each
+    // scene ends on a longer breath.
+    var LYRICS = [];
+    SCENES.forEach(function (s) {
+      LYRICS.push({ html: '<span class="cmd">$</span> ' + s.cmd, cmd: true, hold: 380 });
+      s.out.forEach(function (html, i) {
+        LYRICS.push({ html: html, hold: i === s.out.length - 1 ? 1000 : 260 });
+      });
+    });
+    LYRICS.push({ html: '<span class="cmd">$</span> ', cmd: true, hold: 2600 });
+
     var caret = document.createElement('span');
     caret.className = 'cursor';
 
     var timer = null;
     var wait = function (ms, fn) { timer = window.setTimeout(fn, ms); };
 
-    var addLine = function () {
+    // Keep the active line vertically centred, like a lyrics view.
+    var focus = function (el) {
+      var prev = termScreen.querySelector('.line.active');
+      if (prev) { prev.classList.remove('active'); prev.classList.add('past'); }
+      el.classList.add('active');
+      var shift = el.offsetTop + el.offsetHeight / 2 - termBody.clientHeight / 2;
+      termScreen.style.transform = 'translateY(' + (-shift) + 'px)';
+    };
+
+    // Types an HTML line a character at a time, keeping its colour spans intact.
+    var typeLine = function (el, html, cmd, done) {
+      el.innerHTML = html;
+      var nodes = [];
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      var n;
+      while ((n = walker.nextNode())) { nodes.push({ node: n, text: n.nodeValue }); n.nodeValue = ''; }
+      el.appendChild(caret);
+
+      var ni = 0, ci = 0;
+      (function tick() {
+        while (ni < nodes.length && ci >= nodes[ni].text.length) { ni++; ci = 0; }
+        if (ni >= nodes.length) return done();
+        nodes[ni].node.nodeValue = nodes[ni].text.slice(0, ++ci);
+        // Jitter so it reads as typing rather than a metronome.
+        wait(cmd ? 50 + Math.random() * 65 : 22 + Math.random() * 30, tick);
+      })();
+    };
+
+    var reset = function () {
+      window.clearTimeout(timer);
+      termScreen.textContent = '';
+      // Jump back without animating, or the first line slides in from the old offset.
+      termScreen.style.transition = 'none';
+      termScreen.style.transform = '';
+      void termScreen.offsetHeight;
+      termScreen.style.transition = '';
+    };
+
+    var idx = 0;
+    var sing = function () {
+      if (idx >= LYRICS.length) {
+        reset();
+        idx = 0;
+      }
+      var lyric = LYRICS[idx++];
       var el = document.createElement('div');
       el.className = 'line';
       termScreen.appendChild(el);
-      return el;
-    };
-    // Terminals scroll; the card has a fixed height, so ride the bottom.
-    var toBottom = function () { termBody.scrollTop = termBody.scrollHeight; };
-
-    var typeCmd = function (text, done) {
-      var line = addLine();
-      var prompt = document.createElement('span');
-      prompt.className = 'cmd';
-      prompt.textContent = '$ ';
-      line.appendChild(prompt);
-
-      var typed = document.createElement('span');
-      line.appendChild(typed);
-      line.appendChild(caret);
-      toBottom();
-
-      var i = 0;
-      (function tick() {
-        if (i >= text.length) return wait(420, done);
-        typed.textContent += text.charAt(i++);
-        toBottom();
-        // Jitter so it reads as typing rather than a metronome.
-        wait(42 + Math.random() * 70, tick);
-      })();
+      focus(el);
+      typeLine(el, lyric.html, lyric.cmd, function () { wait(lyric.hold, sing); });
     };
 
-    var printOut = function (lines, done) {
-      if (caret.parentNode) caret.parentNode.removeChild(caret); // no caret mid-output
-      var i = 0;
-      (function tick() {
-        if (i >= lines.length) return wait(1100, done);
-        addLine().innerHTML = lines[i++];
-        toBottom();
-        wait(70 + Math.random() * 90, tick);
-      })();
-    };
-
-    var scene = 0;
-    var runScene = function () {
-      var s = SCENES[scene];
-      typeCmd(s.cmd, function () {
-        printOut(s.out, function () {
-          scene++;
-          if (scene < SCENES.length) return runScene();
-          // Idle at a fresh prompt, then wipe and loop.
-          var last = addLine();
-          var p = document.createElement('span');
-          p.className = 'cmd';
-          p.textContent = '$ ';
-          last.appendChild(p);
-          last.appendChild(caret);
-          toBottom();
-          wait(2600, function () {
-            termScreen.textContent = '';
-            scene = 0;
-            runScene();
-          });
-        });
-      });
-    };
-
-    termScreen.textContent = '';   // drop the static fallback
-    wait(500, runScene);
+    termBody.classList.add('lyrics');
+    reset();                       // drop the static fallback
+    wait(500, sing);
 
     // Don't animate offscreen — saves the timer churn while scrolled away.
     if ('IntersectionObserver' in window) {
@@ -290,12 +326,11 @@
         entries.forEach(function (e) {
           if (e.isIntersecting && paused) {
             paused = false;
-            runScene();
+            sing();
           } else if (!e.isIntersecting && !paused) {
             paused = true;
-            window.clearTimeout(timer);
-            termScreen.textContent = '';
-            scene = 0;
+            reset();
+            idx = 0;
           }
         });
       }, { threshold: 0 }).observe(termBody);
